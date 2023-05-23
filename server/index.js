@@ -13,10 +13,20 @@ const taskSchema = new mongoose.Schema({
   id: String,
   name: String,
   completed: Boolean,
-  color: String,
 });
 
 const Task = mongoose.model("Task", taskSchema);
+
+// Fetch all tasks
+app.get("/tasks", async (req, res) => {
+  try {
+    const tasks = await Task.find();
+    res.status(200).json(tasks);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Server error" });
+  }
+});
 
 // Create a new task
 app.post("/tasks", async (req, res) => {
@@ -46,7 +56,10 @@ app.delete("/tasks/:id", async (req, res) => {
 });
 
 const start = async () => {
-  await mongoose.connect("mongodb+srv://your-mongodb-connection-string");
+  await mongoose.connect("mongodb+srv://mufidalnadi996:PJBTnlQBEPGDFN3w@cluster0.2nrymlo.mongodb.net/?retryWrites=true&w=majority", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
 
   app.listen(8000, () => {
     console.log("Server is running on port 8000");
